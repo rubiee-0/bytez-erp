@@ -104,9 +104,9 @@
 
     <div class="demo-creds">
         <strong>Demo Credentials:</strong><br>
-        👑 Admin: admin@bytez.com / Admin@123<br>
-        👔 Manager: manager@bytez.com / Admin@123<br>
-        👤 Employee: employee@bytez.com / Admin@123
+        👑 Admin: admin@bytez.com / password<br>
+        👔 Manager: manager@bytez.com / password<br>
+        👤 Employee: employee@bytez.com / password
     </div>
 </div>
 
