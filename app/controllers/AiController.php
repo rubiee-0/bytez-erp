@@ -100,7 +100,17 @@ class AiController {
     }
 
     private function callOpenAI($prompt) {
-        $apiKey = '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'; // 👈 paste gsk_... key here
+        $envFile = __DIR__ . '/../../../.env';
+        if (file_exists($envFile)) {
+            $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            foreach ($lines as $line) {
+                if (strpos($line, '=') !== false) {
+                    [$key, $value] = explode('=', $line, 2);
+                    $_ENV[trim($key)] = trim($value);
+                }
+            }
+        }
+        $apiKey = $_ENV['GROQ_API_KEY'] ?? '';
 
         $data = [
             'model'    => 'llama3-8b-8192',
