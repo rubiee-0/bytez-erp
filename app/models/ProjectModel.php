@@ -1,10 +1,15 @@
 <?php
-class ProjectModel {
+class ProjectModel
+{
     public $db;
 
-    public function __construct() { $this->db = getDB(); }
+    public function __construct()
+    {
+        $this->db = getDB();
+    }
 
-    public function getAll() {
+    public function getAll()
+    {
         $result = $this->db->query("
             SELECT p.*, c.company_name, u.name as manager_name
             FROM projects p
@@ -15,7 +20,8 @@ class ProjectModel {
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function findById($id) {
+    public function findById($id)
+    {
         $stmt = $this->db->prepare("
             SELECT p.*, c.company_name, u.name as manager_name
             FROM projects p
@@ -28,57 +34,107 @@ class ProjectModel {
         return $stmt->get_result()->fetch_assoc();
     }
 
-    public function create($data) {
-        $stmt = $this->db->prepare("
-            INSERT INTO projects 
-            (title, description, client_id, manager_id, start_date, deadline, budget, status, progress)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ");
-        $stmt->bind_param('ssiissdsi',
-            $data['title'],
-            $data['description'],
-            $data['client_id'],
-            $data['manager_id'],
-            $data['start_date'],
-            $data['deadline'],
-            $data['budget'],
-            $data['status'],
-            $data['progress']
-        );
+    public function create($data)
+    {
+        $managerId = empty($data['manager_id']) ? null : $data['manager_id'];
+
+        if ($managerId === null) {
+            $stmt = $this->db->prepare("
+                INSERT INTO projects 
+                (title, description, client_id, manager_id, start_date, deadline, budget, status, progress)
+                VALUES (?, ?, ?, NULL, ?, ?, ?, ?, ?)
+            ");
+            $stmt->bind_param(
+                'ssissdsi',
+                $data['title'],
+                $data['description'],
+                $data['client_id'],
+                $data['start_date'],
+                $data['deadline'],
+                $data['budget'],
+                $data['status'],
+                $data['progress']
+            );
+        } else {
+            $stmt = $this->db->prepare("
+                INSERT INTO projects 
+                (title, description, client_id, manager_id, start_date, deadline, budget, status, progress)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ");
+            $stmt->bind_param(
+                'ssiissdsi',
+                $data['title'],
+                $data['description'],
+                $data['client_id'],
+                $managerId,
+                $data['start_date'],
+                $data['deadline'],
+                $data['budget'],
+                $data['status'],
+                $data['progress']
+            );
+        }
         $result = $stmt->execute();
         $this->lastId = $this->db->insert_id;
         return $result;
     }
 
-    public function update($id, $data) {
-        $stmt = $this->db->prepare("
-            UPDATE projects 
-            SET title=?, description=?, client_id=?, manager_id=?,
-            start_date=?, deadline=?, budget=?, status=?, progress=? 
-            WHERE id=?
-        ");
-        $stmt->bind_param('ssiissdsii',
-            $data['title'],
-            $data['description'],
-            $data['client_id'],
-            $data['manager_id'],
-            $data['start_date'],
-            $data['deadline'],
-            $data['budget'],
-            $data['status'],
-            $data['progress'],
-            $id
-        );
+    public function update($id, $data)
+    {
+        $managerId = empty($data['manager_id']) ? null : $data['manager_id'];
+
+        if ($managerId === null) {
+            $stmt = $this->db->prepare("
+                UPDATE projects 
+                SET title=?, description=?, client_id=?, manager_id=NULL,
+                start_date=?, deadline=?, budget=?, status=?, progress=? 
+                WHERE id=?
+            ");
+            $stmt->bind_param(
+                'ssiissdsi',
+                $data['title'],
+                $data['description'],
+                $data['client_id'],
+                $data['start_date'],
+                $data['deadline'],
+                $data['budget'],
+                $data['status'],
+                $data['progress'],
+                $id
+            );
+        } else {
+            $stmt = $this->db->prepare("
+                UPDATE projects 
+                SET title=?, description=?, client_id=?, manager_id=?,
+                start_date=?, deadline=?, budget=?, status=?, progress=? 
+                WHERE id=?
+            ");
+            $stmt->bind_param(
+                'ssiissdsii',
+                $data['title'],
+                $data['description'],
+                $data['client_id'],
+                $managerId,
+                $data['start_date'],
+                $data['deadline'],
+                $data['budget'],
+                $data['status'],
+                $data['progress'],
+                $id
+            );
+        }
         return $stmt->execute();
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $stmt = $this->db->prepare("DELETE FROM projects WHERE id=?");
         $stmt->bind_param('i', $id);
         return $stmt->execute();
     }
 
-    public function getMembers($project_id) {
+    public function getMembers($project_id)
+    {
         $stmt = $this->db->prepare("
             SELECT u.id, u.name, u.role, u.email
             FROM project_members pm
@@ -90,7 +146,8 @@ class ProjectModel {
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function addMember($project_id, $user_id) {
+    public function addMember($project_id, $user_id)
+    {
         $stmt = $this->db->prepare("
             INSERT IGNORE INTO project_members (project_id, user_id) VALUES (?, ?)
         ");
@@ -98,13 +155,15 @@ class ProjectModel {
         return $stmt->execute();
     }
 
-    public function removeMembers($project_id) {
+    public function removeMembers($project_id)
+    {
         $stmt = $this->db->prepare("DELETE FROM project_members WHERE project_id=?");
         $stmt->bind_param('i', $project_id);
         return $stmt->execute();
     }
 
-    public function getTasks($project_id) {
+    public function getTasks($project_id)
+    {
         $stmt = $this->db->prepare("
             SELECT t.*, u.name as assigned_name
             FROM tasks t

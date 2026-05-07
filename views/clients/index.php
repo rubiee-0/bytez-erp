@@ -49,11 +49,16 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="/bytez-erp/clients/edit/<?= $c['id'] ?>" class="btn btn-sm btn-outline-primary">
+                                <a href="/bytez-erp/clients/view/<?= $c['id'] ?>" class="btn btn-sm btn-outline-info me-1"
+                                    title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="/bytez-erp/clients/edit/<?= $c['id'] ?>"
+                                    class="btn btn-sm btn-outline-primary me-1" title="Edit">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <a href="/bytez-erp/clients/delete/<?= $c['id'] ?>" class="btn btn-sm btn-outline-danger"
-                                    onclick="return confirm('Delete this client?')">
+                                    title="Delete" onclick="return confirm('Delete this client?')">
                                     <i class="fas fa-trash"></i>
                                 </a>
                             </td>
