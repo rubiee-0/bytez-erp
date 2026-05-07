@@ -1,31 +1,35 @@
 <?php
 require_once 'app/models/UserModel.php';
 
-class UsersController {
+class UsersController
+{
     private $model;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->model = new UserModel();
     }
 
-    public function index($param = null) {
+    public function index($param = null)
+    {
         requireRole('admin');
-        $users     = $this->model->getAll();
+        $users = $this->model->getAll();
         $pageTitle = 'Users Management';
         require_once 'views/layouts/header.php';
         require_once 'views/users/index.php';
         require_once 'views/layouts/footer.php';
     }
 
-    public function create($param = null) {
+    public function create($param = null)
+    {
         requireRole('admin');
         $error = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
-                'name'     => trim($_POST['name'] ?? ''),
-                'email'    => trim($_POST['email'] ?? ''),
+                'name' => trim($_POST['name'] ?? ''),
+                'email' => trim($_POST['email'] ?? ''),
                 'password' => trim($_POST['password'] ?? ''),
-                'role'     => $_POST['role'] ?? 'employee',
+                'role' => $_POST['role'] ?? 'employee',
             ];
             if (empty($data['name'])) {
                 $error = 'Name is required.';
@@ -39,7 +43,7 @@ class UsersController {
                 $error = 'Password must be at least 6 characters.';
             } else {
                 $this->model->create($data);
-                header('Location: /Codebytez/users/index');
+                header('Location: /bytez-erp/users/index');
                 exit();
             }
         }
@@ -49,16 +53,19 @@ class UsersController {
         require_once 'views/layouts/footer.php';
     }
 
-    public function edit($id = null) {
+    public function edit($id = null)
+    {
         requireRole('admin');
-        $user  = $this->model->findById($id);
-        if (!$user) { die('User not found'); }
+        $user = $this->model->findById($id);
+        if (!$user) {
+            die('User not found');
+        }
         $error = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
-                'name'  => trim($_POST['name'] ?? ''),
+                'name' => trim($_POST['name'] ?? ''),
                 'email' => trim($_POST['email'] ?? ''),
-                'role'  => $_POST['role'] ?? 'employee',
+                'role' => $_POST['role'] ?? 'employee',
             ];
             if (empty($data['name'])) {
                 $error = 'Name is required.';
@@ -77,7 +84,7 @@ class UsersController {
                     }
                 }
                 if (empty($error)) {
-                    header('Location: /Codebytez/users/index');
+                    header('Location: /bytez-erp/users/index');
                     exit();
                 }
             }
@@ -88,13 +95,14 @@ class UsersController {
         require_once 'views/layouts/footer.php';
     }
 
-    public function delete($id = null) {
+    public function delete($id = null)
+    {
         requireRole('admin');
         if ($id == $_SESSION['user_id']) {
             die('You cannot delete yourself!');
         }
         $this->model->delete($id);
-        header('Location: /Codebytez/users/index');
+        header('Location: /bytez-erp/users/index');
         exit();
     }
 }

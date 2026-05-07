@@ -7,9 +7,9 @@ $url = isset($_GET['url']) ? trim($_GET['url'], '/') : '';
 
 if (empty($url)) {
     if (isLoggedIn()) {
-        header('Location: /Codebytez/dashboard/index');
+        header('Location: /bytez-erp/dashboard/index');
     } else {
-        header('Location: /Codebytez/auth/login');
+        header('Location: /bytez-erp/auth/login');
     }
     exit();
 }

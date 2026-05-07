@@ -8,7 +8,7 @@
                     <p class="text-muted mb-0"><?= htmlspecialchars($project['company_name'] ?? '') ?></p>
                 </div>
                 <div class="d-flex gap-2">
-                    <a href="/Codebytez/projects/edit/<?= $project['id'] ?>" class="btn btn-sm btn-outline-primary">
+                    <a href="/bytez-erp/projects/edit/<?= $project['id'] ?>" class="btn btn-sm btn-outline-primary">
                         <i class="fas fa-edit"></i> Edit
                     </a>
                 </div>
@@ -57,7 +57,7 @@
         <div class="card p-4">
             <div class="d-flex justify-content-between mb-3">
                 <h6 class="fw-bold mb-0">Tasks (<?= count($tasks) ?>)</h6>
-                <a href="/Codebytez/tasks/create?project_id=<?= $project['id'] ?>"
+                <a href="/bytez-erp/tasks/create?project_id=<?= $project['id'] ?>"
                    class="btn btn-sm btn-primary">
                     <i class="fas fa-plus me-1"></i> Add Task
                 </a>
@@ -72,7 +72,7 @@
                     <strong><?= htmlspecialchars($t['title']) ?></strong>
                     <small class="text-muted ms-2">→ <?= htmlspecialchars($t['assigned_name'] ?? 'Unassigned') ?></small>
                 </div>
-                <a href="/Codebytez/tasks/edit/<?= $t['id'] ?>" class="btn btn-sm btn-outline-secondary">
+                <a href="/bytez-erp/tasks/edit/<?= $t['id'] ?>" class="btn btn-sm btn-outline-secondary">
                     <i class="fas fa-edit"></i>
                 </a>
             </div>

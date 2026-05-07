@@ -68,24 +68,33 @@
         <div class="card p-4">
             <div class="d-flex justify-content-between mb-3">
                 <h6 class="fw-bold mb-0">Recent Projects</h6>
-                <a href="/Codebytez/projects/index" class="btn btn-sm btn-outline-primary">View All</a>
+                <a href="/bytez-erp/projects/index" class="btn btn-sm btn-outline-primary">View All</a>
             </div>
             <table class="table table-sm">
-                <thead><tr><th>Project</th><th>Client</th><th>Status</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th>Project</th>
+                        <th>Client</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
                 <tbody>
-                <?php foreach ($recentProjects as $p): ?>
-                <tr>
-                    <td><?= htmlspecialchars($p['title']) ?></td>
-                    <td><?= htmlspecialchars($p['company_name'] ?? '-') ?></td>
-                    <td>
-                        <?php $b=['pending'=>'warning','in_progress'=>'primary','completed'=>'success','cancelled'=>'danger']; ?>
-                        <span class="badge bg-<?= $b[$p['status']]??'secondary' ?>"><?= ucfirst(str_replace('_',' ',$p['status'])) ?></span>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-                <?php if(empty($recentProjects)): ?>
-                <tr><td colspan="3" class="text-center text-muted py-3">No projects yet</td></tr>
-                <?php endif; ?>
+                    <?php foreach ($recentProjects as $p): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($p['title']) ?></td>
+                            <td><?= htmlspecialchars($p['company_name'] ?? '-') ?></td>
+                            <td>
+                                <?php $b = ['pending' => 'warning', 'in_progress' => 'primary', 'completed' => 'success', 'cancelled' => 'danger']; ?>
+                                <span
+                                    class="badge bg-<?= $b[$p['status']] ?? 'secondary' ?>"><?= ucfirst(str_replace('_', ' ', $p['status'])) ?></span>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    <?php if (empty($recentProjects)): ?>
+                        <tr>
+                            <td colspan="3" class="text-center text-muted py-3">No projects yet</td>
+                        </tr>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
@@ -94,24 +103,33 @@
         <div class="card p-4">
             <div class="d-flex justify-content-between mb-3">
                 <h6 class="fw-bold mb-0">Recent Tasks</h6>
-                <a href="/Codebytez/tasks/index" class="btn btn-sm btn-outline-primary">View All</a>
+                <a href="/bytez-erp/tasks/index" class="btn btn-sm btn-outline-primary">View All</a>
             </div>
             <table class="table table-sm">
-                <thead><tr><th>Task</th><th>Assigned To</th><th>Status</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>Assigned To</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
                 <tbody>
-                <?php foreach ($recentTasks as $t): ?>
-                <tr>
-                    <td><?= htmlspecialchars($t['title']) ?></td>
-                    <td><?= htmlspecialchars($t['assigned_name'] ?? 'Unassigned') ?></td>
-                    <td>
-                        <?php $tb=['todo'=>'secondary','in_progress'=>'primary','completed'=>'success']; ?>
-                        <span class="badge bg-<?= $tb[$t['status']]??'secondary' ?>"><?= ucfirst(str_replace('_',' ',$t['status'])) ?></span>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-                <?php if(empty($recentTasks)): ?>
-                <tr><td colspan="3" class="text-center text-muted py-3">No tasks yet</td></tr>
-                <?php endif; ?>
+                    <?php foreach ($recentTasks as $t): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($t['title']) ?></td>
+                            <td><?= htmlspecialchars($t['assigned_name'] ?? 'Unassigned') ?></td>
+                            <td>
+                                <?php $tb = ['todo' => 'secondary', 'in_progress' => 'primary', 'completed' => 'success']; ?>
+                                <span
+                                    class="badge bg-<?= $tb[$t['status']] ?? 'secondary' ?>"><?= ucfirst(str_replace('_', ' ', $t['status'])) ?></span>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    <?php if (empty($recentTasks)): ?>
+                        <tr>
+                            <td colspan="3" class="text-center text-muted py-3">No tasks yet</td>
+                        </tr>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
@@ -119,30 +137,30 @@
 </div>
 
 <script>
-new Chart(document.getElementById('taskChart'), {
-    type: 'doughnut',
-    data: {
-        labels: ['To Do', 'In Progress', 'Completed'],
-        datasets: [{
-            data: [<?= $taskChart['todo'] ?>, <?= $taskChart['in_progress'] ?>, <?= $taskChart['completed'] ?>],
-            backgroundColor: ['#94a3b8','#4f46e5','#10b981'],
-            borderWidth: 0
-        }]
-    },
-    options: { plugins: { legend: { position: 'bottom' } }, cutout: '70%' }
-});
+    new Chart(document.getElementById('taskChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['To Do', 'In Progress', 'Completed'],
+            datasets: [{
+                data: [<?= $taskChart['todo'] ?>, <?= $taskChart['in_progress'] ?>, <?= $taskChart['completed'] ?>],
+                backgroundColor: ['#94a3b8', '#4f46e5', '#10b981'],
+                borderWidth: 0
+            }]
+        },
+        options: { plugins: { legend: { position: 'bottom' } }, cutout: '70%' }
+    });
 
-new Chart(document.getElementById('projectChart'), {
-    type: 'bar',
-    data: {
-        labels: ['Pending','In Progress','Completed','Cancelled'],
-        datasets: [{
-            label: 'Projects',
-            data: [<?= $projectChart['pending'] ?>, <?= $projectChart['in_progress'] ?>, <?= $projectChart['completed'] ?>, <?= $projectChart['cancelled'] ?>],
-            backgroundColor: ['#f59e0b','#4f46e5','#10b981','#ef4444'],
-            borderRadius: 8
-        }]
-    },
-    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
-});
+    new Chart(document.getElementById('projectChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Pending', 'In Progress', 'Completed', 'Cancelled'],
+            datasets: [{
+                label: 'Projects',
+                data: [<?= $projectChart['pending'] ?>, <?= $projectChart['in_progress'] ?>, <?= $projectChart['completed'] ?>, <?= $projectChart['cancelled'] ?>],
+                backgroundColor: ['#f59e0b', '#4f46e5', '#10b981', '#ef4444'],
+                borderRadius: 8
+            }]
+        },
+        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+    });
 </script>

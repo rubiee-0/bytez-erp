@@ -3,7 +3,7 @@
 <div class="card p-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h5 class="fw-bold mb-0"><i class="fas fa-check-square me-2 text-primary"></i>Create New Task</h5>
-        <a href="/Codebytez/tasks/index" class="btn btn-sm btn-outline-secondary">
+        <a href="/bytez-erp/tasks/index" class="btn btn-sm btn-outline-secondary">
             <i class="fas fa-arrow-left me-1"></i> Back
         </a>
     </div>
@@ -72,7 +72,7 @@
                 <button type="submit" class="btn btn-primary px-4">
                     <i class="fas fa-save me-2"></i> Create Task
                 </button>
-                <a href="/Codebytez/tasks/index" class="btn btn-outline-secondary ms-2">Cancel</a>
+                <a href="/bytez-erp/tasks/index" class="btn btn-outline-secondary ms-2">Cancel</a>
             </div>
         </div>
     </form>

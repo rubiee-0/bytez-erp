@@ -3,39 +3,43 @@ require_once 'app/models/TaskModel.php';
 require_once 'app/models/ProjectModel.php';
 require_once 'app/models/UserModel.php';
 
-class TasksController {
+class TasksController
+{
     private $model;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->model = new TaskModel();
     }
 
-    public function index($param = null) {
+    public function index($param = null)
+    {
         requireLogin();
-        $tasks     = $this->model->getAll();
+        $tasks = $this->model->getAll();
         $pageTitle = 'Tasks';
         require_once 'views/layouts/header.php';
         require_once 'views/tasks/index.php';
         require_once 'views/layouts/footer.php';
     }
 
-    public function create($param = null) {
+    public function create($param = null)
+    {
         requireLogin();
-        $error    = '';
+        $error = '';
         $projects = (new ProjectModel())->getAll();
-        $users    = (new UserModel())->getAll();
+        $users = (new UserModel())->getAll();
         $selectedProject = $_GET['project_id'] ?? '';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
-                'title'       => trim($_POST['title'] ?? ''),
+                'title' => trim($_POST['title'] ?? ''),
                 'description' => trim($_POST['description'] ?? ''),
-                'project_id'  => (int)($_POST['project_id'] ?? 0),
-                'assigned_to' => (int)($_POST['assigned_to'] ?? 0),
-                'created_by'  => $_SESSION['user_id'],
-                'priority'    => $_POST['priority'] ?? 'medium',
-                'status'      => $_POST['status'] ?? 'todo',
-                'deadline'    => $_POST['deadline'] ?? '',
+                'project_id' => (int) ($_POST['project_id'] ?? 0),
+                'assigned_to' => (int) ($_POST['assigned_to'] ?? 0),
+                'created_by' => $_SESSION['user_id'],
+                'priority' => $_POST['priority'] ?? 'medium',
+                'status' => $_POST['status'] ?? 'todo',
+                'deadline' => $_POST['deadline'] ?? '',
             ];
 
             if (empty($data['title'])) {
@@ -47,8 +51,8 @@ class TasksController {
             } else {
                 $this->model->create($data);
                 $redirect = $selectedProject
-                    ? "/Codebytez/projects/view/{$data['project_id']}"
-                    : '/Codebytez/tasks/index';
+                    ? "/bytez-erp/projects/view/{$data['project_id']}"
+                    : '/bytez-erp/tasks/index';
                 header("Location: $redirect");
                 exit();
             }
@@ -60,35 +64,41 @@ class TasksController {
         require_once 'views/layouts/footer.php';
     }
 
-    public function view($id = null) {
+    public function view($id = null)
+    {
         requireLogin();
-        $task        = $this->model->findById($id);
-        if (!$task) { die('Task not found'); }
-        $comments    = $this->model->getComments($id);
+        $task = $this->model->findById($id);
+        if (!$task) {
+            die('Task not found');
+        }
+        $comments = $this->model->getComments($id);
         $attachments = $this->model->getAttachments($id);
-        $pageTitle   = $task['title'];
+        $pageTitle = $task['title'];
         require_once 'views/layouts/header.php';
         require_once 'views/tasks/view.php';
         require_once 'views/layouts/footer.php';
     }
 
-    public function edit($id = null) {
+    public function edit($id = null)
+    {
         requireLogin();
-        $task     = $this->model->findById($id);
-        if (!$task) { die('Task not found'); }
+        $task = $this->model->findById($id);
+        if (!$task) {
+            die('Task not found');
+        }
         $projects = (new ProjectModel())->getAll();
-        $users    = (new UserModel())->getAll();
-        $error    = '';
+        $users = (new UserModel())->getAll();
+        $error = '';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
-                'title'       => trim($_POST['title'] ?? ''),
+                'title' => trim($_POST['title'] ?? ''),
                 'description' => trim($_POST['description'] ?? ''),
-                'project_id'  => (int)($_POST['project_id'] ?? 0),
-                'assigned_to' => (int)($_POST['assigned_to'] ?? 0),
-                'priority'    => $_POST['priority'] ?? 'medium',
-                'status'      => $_POST['status'] ?? 'todo',
-                'deadline'    => $_POST['deadline'] ?? '',
+                'project_id' => (int) ($_POST['project_id'] ?? 0),
+                'assigned_to' => (int) ($_POST['assigned_to'] ?? 0),
+                'priority' => $_POST['priority'] ?? 'medium',
+                'status' => $_POST['status'] ?? 'todo',
+                'deadline' => $_POST['deadline'] ?? '',
             ];
 
             if (empty($data['title'])) {
@@ -99,7 +109,7 @@ class TasksController {
                 $error = 'Deadline is required.';
             } else {
                 $this->model->update($id, $data);
-                header('Location: /Codebytez/tasks/view/' . $id);
+                header('Location: /bytez-erp/tasks/view/' . $id);
                 exit();
             }
         }
@@ -110,42 +120,45 @@ class TasksController {
         require_once 'views/layouts/footer.php';
     }
 
-    public function delete($id = null) {
+    public function delete($id = null)
+    {
         requireLogin();
         $this->model->delete($id);
-        header('Location: /Codebytez/tasks/index');
+        header('Location: /bytez-erp/tasks/index');
         exit();
     }
 
-    public function comment($id = null) {
+    public function comment($id = null)
+    {
         requireLogin();
         $comment = trim($_POST['comment'] ?? '');
         if (!empty($comment)) {
             $this->model->addComment($id, $_SESSION['user_id'], $comment);
         }
-        header('Location: /Codebytez/tasks/view/' . $id);
+        header('Location: /bytez-erp/tasks/view/' . $id);
         exit();
     }
 
-    public function upload($id = null) {
+    public function upload($id = null)
+    {
         requireLogin();
         if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] === 0) {
-            $uploadDir  = 'public/uploads/';
-            $fileName   = time() . '_' . basename($_FILES['attachment']['name']);
-            $filePath   = $uploadDir . $fileName;
-            $fileType   = $_FILES['attachment']['type'];
+            $uploadDir = 'public/uploads/';
+            $fileName = time() . '_' . basename($_FILES['attachment']['name']);
+            $filePath = $uploadDir . $fileName;
+            $fileType = $_FILES['attachment']['type'];
 
             if (move_uploaded_file($_FILES['attachment']['tmp_name'], $filePath)) {
                 $this->model->addAttachment([
-                    'task_id'   => $id,
-                    'user_id'   => $_SESSION['user_id'],
+                    'task_id' => $id,
+                    'user_id' => $_SESSION['user_id'],
                     'file_name' => basename($_FILES['attachment']['name']),
                     'file_path' => $filePath,
                     'file_type' => $fileType,
                 ]);
             }
         }
-        header('Location: /Codebytez/tasks/view/' . $id);
+        header('Location: /bytez-erp/tasks/view/' . $id);
         exit();
     }
 }

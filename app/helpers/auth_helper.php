@@ -1,16 +1,19 @@
 <?php
-function isLoggedIn() {
+function isLoggedIn()
+{
     return isset($_SESSION['user_id']);
 }
 
-function requireLogin() {
+function requireLogin()
+{
     if (!isLoggedIn()) {
-        header('Location: /Codebytez/auth/login');
+        header('Location: /bytez-erp/auth/login');
         exit();
     }
 }
 
-function requireRole(...$roles) {
+function requireRole(...$roles)
+{
     requireLogin();
     if (!in_array($_SESSION['user_role'], $roles)) {
         http_response_code(403);
@@ -18,9 +21,10 @@ function requireRole(...$roles) {
     }
 }
 
-function currentUser() {
+function currentUser()
+{
     return [
-        'id'   => $_SESSION['user_id'] ?? null,
+        'id' => $_SESSION['user_id'] ?? null,
         'name' => $_SESSION['user_name'] ?? null,
         'role' => $_SESSION['user_role'] ?? null,
     ];

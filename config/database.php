@@ -3,9 +3,10 @@ define('DB_HOST', 'localhost');
 define('DB_PORT', 3306);
 define('DB_USER', 'berlin');
 define('DB_PASS', 'Berlin@123');  // 👈 put your MySQL password here
-define('DB_NAME', 'bytez_erp');
+define('DB_NAME', 'integrated_billing_system');
 
-function getDB() {
+function getDB()
+{
     static $conn = null;
     if ($conn === null) {
         $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
